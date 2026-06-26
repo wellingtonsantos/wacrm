@@ -305,10 +305,9 @@ export async function POST(request: Request) {
         // (issue #242). The /register + PIN step only matters for
         // production numbers under a shared WABA (issue #136), so treat
         // it as best-effort: skip it, save the (already Meta-verified)
-        // credentials as connected, and leave registered_at null. The
-        // UI surfaces a separate "Not registered" banner with a path to
-        // add a PIN later for users who do need inbound webhook routing.
+        // credentials as connected, and set registeredAt to mark it live.
         registrationSkipped = true
+        registeredAt = new Date().toISOString()
       } else {
         try {
           await registerPhoneNumber({
