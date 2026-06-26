@@ -55,6 +55,11 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+  --spacing-0_5: 0.25rem;
+  --spacing-1_5: 0.5rem;
+  --spacing-2_5: 0.75rem;
+  --spacing-3_5: 1rem;
+  --spacing-4_5: 1.25rem;
 }
 
 /* ============================================================

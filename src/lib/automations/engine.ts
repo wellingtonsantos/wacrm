@@ -221,10 +221,37 @@ interface ExecuteArgs {
   startPosition: number
   logId: string | null
   triggerEvent: string
+  contactData?: Record<string, unknown>
 }
 
 async function executeStepsFrom(args: ExecuteArgs): Promise<void> {
   const db = supabaseAdmin()
+
+  let contactData = args.contactData
+  if (args.contactId && !contactData) {
+    const { data: contact } = await db
+      .from('contacts')
+      .select('*')
+      .eq('id', args.contactId)
+      .maybeSingle()
+    if (contact) {
+      const contactMap: Record<string, unknown> = { ...(contact as Record<string, unknown>) }
+      const [customValuesRes, customFieldsRes] = await Promise.all([
+        db.from('contact_custom_values').select('value, custom_field_id').eq('contact_id', args.contactId),
+        db.from('custom_fields').select('id, field_name')
+      ])
+      if (customValuesRes.data && customFieldsRes.data) {
+        for (const cv of customValuesRes.data) {
+          contactMap[`custom:${cv.custom_field_id}`] = cv.value
+          const f = customFieldsRes.data.find((cf: { id: string }) => cf.id === cv.custom_field_id)
+          if (f) {
+            contactMap[f.field_name] = cv.value
+          }
+        }
+      }
+      contactData = contactMap
+    }
+  }
 
   const baseQuery = db
     .from('automation_steps')
@@ -304,11 +331,12 @@ async function executeStepsFrom(args: ExecuteArgs): Promise<void> {
           branch: taken ? 'yes' : 'no',
           startPosition: 0,
           logId: args.logId,
+          contactData,
         })
         continue
       }
 
-      const detail = await runStep(step, args)
+      const detail = await runStep(step, { ...args, contactData })
       results.push({
         step_id: step.id,
         step_type: step.step_type,
@@ -344,7 +372,7 @@ async function runStep(step: AutomationStep, args: ExecuteArgs): Promise<string>
     case 'send_message': {
       const cfg = step.step_config as SendMessageStepConfig
       if (!args.contactId) throw new Error('send_message needs a contact')
-      const text = interpolate(cfg.text, args)
+      const text = interpolate(cfg.text, args, args.contactData)
       if (!text.trim()) throw new Error('send_message has empty text')
       const conversationId = await resolveConversationId(args)
       const { whatsapp_message_id } = await engineSendText({
@@ -449,7 +477,7 @@ async function runStep(step: AutomationStep, args: ExecuteArgs): Promise<string>
       if (!args.contactId) throw new Error('update_contact_field needs a contact')
       // Resolve workflow variables ({{ vars.* }}, {{ message.text }}) so custom
       // values can be populated dynamically from the triggering context.
-      const value = interpolate(cfg.value, args)
+      const value = interpolate(cfg.value, args, args.contactData)
 
       // Custom fields are encoded as `custom:<custom_field_id>`; anything else
       // is a built-in contact column.
@@ -516,8 +544,8 @@ async function runStep(step: AutomationStep, args: ExecuteArgs): Promise<string>
         pipeline_id: cfg.pipeline_id,
         stage_id: cfg.stage_id,
         contact_id: args.contactId,
-        title: interpolate(cfg.title, args),
-        value: cfg.value ?? 0,
+        title: interpolate(cfg.title, args, args.contactData),
+        value: parseFloat(interpolate(String(cfg.value ?? 0), args, args.contactData)) || 0,
         currency: acct?.default_currency ?? 'USD',
         status: 'open',
       })
@@ -527,7 +555,7 @@ async function runStep(step: AutomationStep, args: ExecuteArgs): Promise<string>
     case 'send_webhook': {
       const cfg = step.step_config as SendWebhookStepConfig
       if (!cfg.url) throw new Error('send_webhook needs url')
-      const body = cfg.body_template ? interpolate(cfg.body_template, args) : JSON.stringify(args.context)
+      const body = cfg.body_template ? interpolate(cfg.body_template, args, args.contactData) : JSON.stringify(args.context)
       const res = await fetch(cfg.url, {
         method: 'POST',
         headers: { 'content-type': 'application/json', ...(cfg.headers ?? {}) },
@@ -648,11 +676,12 @@ function waitMs(cfg: WaitStepConfig): number {
   return Math.max(1_000, cfg.amount * unitMs)
 }
 
-function interpolate(s: string, args: ExecuteArgs): string {
-  return s.replace(/\{\{\s*([\w.]+)\s*\}\}/g, (_, key) => {
+function interpolate(s: string, args: ExecuteArgs, contactData?: Record<string, unknown>): string {
+  return s.replace(/\{\{\s*([\w.:-]+)\s*\}\}/g, (_, key) => {
     const [ns, prop] = String(key).split('.')
     if (ns === 'message' && prop === 'text') return String(args.context.message_text ?? '')
     if (ns === 'vars' && prop) return String(args.context.vars?.[prop] ?? '')
+    if (ns === 'contact' && prop && contactData) return String(contactData[prop] ?? '')
     return ''
   })
 }

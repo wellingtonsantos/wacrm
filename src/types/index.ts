@@ -451,7 +451,7 @@ export interface CreateDealStepConfig {
   pipeline_id: string;
   stage_id: string;
   title: string;
-  value?: number;
+  value?: number | string;
 }
 
 export interface WaitStepConfig {

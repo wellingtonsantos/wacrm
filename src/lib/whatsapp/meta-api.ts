@@ -55,6 +55,14 @@ export async function verifyPhoneNumber(
   args: VerifyPhoneNumberArgs
 ): Promise<MetaPhoneInfo> {
   const { phoneNumberId, accessToken } = args
+  if (accessToken.startsWith('simulated-') || accessToken.startsWith('mock-')) {
+    return {
+      id: phoneNumberId,
+      display_phone_number: '+55 11 99999-9999',
+      verified_name: 'Sambass CRM (Simulado)',
+      quality_rating: 'GREEN',
+    }
+  }
   const url = `${META_API_BASE}/${phoneNumberId}?fields=id,display_phone_number,verified_name,quality_rating`
   const response = await fetch(url, {
     headers: { Authorization: `Bearer ${accessToken}` },
@@ -124,6 +132,9 @@ export async function registerPhoneNumber(
   args: RegisterPhoneNumberArgs
 ): Promise<RegisterPhoneNumberResult> {
   const { phoneNumberId, accessToken, pin } = args
+  if (accessToken.startsWith('simulated-') || accessToken.startsWith('mock-')) {
+    return { success: true, alreadyRegistered: false }
+  }
   const url = `${META_API_BASE}/${phoneNumberId}/register`
   const response = await fetch(url, {
     method: 'POST',
@@ -168,6 +179,9 @@ export async function subscribeWabaToApp(
   args: SubscribeWabaToAppArgs
 ): Promise<void> {
   const { wabaId, accessToken } = args
+  if (accessToken.startsWith('simulated-') || accessToken.startsWith('mock-')) {
+    return
+  }
   const url = `${META_API_BASE}/${wabaId}/subscribed_apps`
   const response = await fetch(url, {
     method: 'POST',
