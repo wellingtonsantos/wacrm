@@ -14,7 +14,7 @@
  */
 
 export const THEME_IDS = [
-  "violet",
+  "brand",
   "emerald",
   "cobalt",
   "amber",
@@ -23,9 +23,9 @@ export const THEME_IDS = [
 
 export type ThemeId = (typeof THEME_IDS)[number];
 
-export const DEFAULT_THEME: ThemeId = "violet";
+export const DEFAULT_THEME: ThemeId = "brand";
 
-export const STORAGE_KEY = "wacrm.theme";
+export const STORAGE_KEY = "sambass-theme";
 
 /**
  * MODE — the light/dark dimension, orthogonal to the accent theme.
@@ -43,9 +43,9 @@ export const MODES = ["light", "dark"] as const;
 
 export type Mode = (typeof MODES)[number];
 
-export const DEFAULT_MODE: Mode = "dark";
+export const DEFAULT_MODE: Mode = "light";
 
-export const MODE_STORAGE_KEY = "wacrm.mode";
+export const MODE_STORAGE_KEY = "sambass-mode";
 
 export function isMode(value: unknown): value is Mode {
   return (
@@ -68,10 +68,10 @@ export interface ThemeMeta {
 
 export const THEMES: ReadonlyArray<ThemeMeta> = [
   {
-    id: "violet",
-    name: "Violeta",
-    tagline: "O padrão — confiante, levemente descontraído.",
-    swatch: "oklch(0.526 0.247 293)",
+    id: "brand",
+    name: "Brand",
+    tagline: "O padrão — azul institucional limpo e moderno.",
+    swatch: "hsl(214 84% 56%)",
   },
   {
     id: "emerald",

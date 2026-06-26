@@ -2,170 +2,312 @@
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
 
+/* ============================================================
+ * SELF-HOSTED FONTS: Poppins
+ * ============================================================ */
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-400.woff2') format('woff2');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-500.woff2') format('woff2');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-600.woff2') format('woff2');
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Poppins';
+  src: url('/fonts/poppins-700.woff2') format('woff2');
+  font-weight: 700;
+  font-style: normal;
+  font-display: swap;
+}
+
 @custom-variant dark (&:is(.dark *));
 
+/* ============================================================
+ * TAILWIND V4 THEME CONFIGURATION
+ * ============================================================ */
 @theme inline {
+  --font-sans: "Poppins", sans-serif;
+  --font-heading: "Poppins", sans-serif;
+
+  /* Custom typographic scale */
+  --text-h1: 2rem;
+  --text-h1--line-height: 2.5rem;
+  --text-h2: 1.5rem;
+  --text-h2--line-height: 2rem;
+  --text-h3: 1.25rem;
+  --text-h3--line-height: 1.75rem;
+  --text-h4: 1rem;
+  --text-h4--line-height: 1.5rem;
+  --text-p1: 1rem;
+  --text-p1--line-height: 1.5rem;
+  --text-p2: 0.875rem;
+  --text-p2--line-height: 1.25rem;
+  --text-p3: 0.75rem;
+  --text-p3--line-height: 1rem;
+
+  /* Semantic spacing scale */
+  --spacing-tiny: 0.25rem;
+  --spacing-small: 0.5rem;
+  --spacing-normal: 0.75rem;
+  --spacing-medium: 1rem;
+  --spacing-large: 1.5rem;
+  --spacing-big: 2.25rem;
+  --spacing-ultra: 3.5rem;
+
+  /* Radius mapping */
+  --radius-lg: var(--radius);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-xl: calc(var(--radius) + 4px);
+  --radius-2xl: calc(var(--radius) + 8px);
+
+  /* Shadows mapping */
+  --shadow-soft: var(--shadow-soft);
+  --shadow-card: var(--shadow-card);
+  --shadow-elevated: var(--shadow-elevated);
+  --shadow-overlay: var(--shadow-overlay);
+
+  /* Mapping all theme variables */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-accent: var(--accent);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
   --color-card: var(--card);
-  /* Secondary card surface (tile / hover backgrounds) and the accent
-   * extras the Settings redesign leans on. The raw --primary-* vars
-   * already exist per-accent below; these mappings expose them (and
-   * --card-2) as Tailwind utilities: bg-card-2, bg-primary-soft,
-   * bg-primary-soft-2, hover:bg-primary-hover. */
-  --color-card-2: var(--card-2);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
   --color-primary-hover: var(--primary-hover);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  /* Surface extensions */
+  --color-surface-1: var(--surface-1);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-surface-4: var(--surface-4);
+
+  /* Color helpers */
+  --color-info: var(--info);
+  --color-info-foreground: var(--info-foreground);
+  --color-info-light: var(--info-light);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-success: var(--success);
+  --color-success-foreground: var(--success-foreground);
+  --color-success-hover: var(--success-hover);
+  --color-warning: var(--warning);
+  --color-warning-foreground: var(--warning-foreground);
+  --color-promo: var(--promo);
+  --color-promo-foreground: var(--promo-foreground);
+
+  /* Sidebar styling */
+  --color-sidebar: var(--sidebar-background);
+  --color-sidebar-foreground: var(--sidebar-foreground);
+  --color-sidebar-primary: var(--sidebar-primary);
+  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
+  --color-sidebar-accent: var(--sidebar-accent);
+  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
+  --color-sidebar-border: var(--sidebar-border);
+  --color-sidebar-ring: var(--sidebar-ring);
+
+  /* Chart & Card extensions */
+  --color-card-2: var(--card-2);
   --color-primary-soft: var(--primary-soft);
   --color-primary-soft-2: var(--primary-soft-2);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-  --spacing-0_5: 0.25rem;
-  --spacing-1_5: 0.5rem;
-  --spacing-2_5: 0.75rem;
-  --spacing-3_5: 1rem;
-  --spacing-4_5: 1.25rem;
+  --color-chart-1: var(--chart-1);
+  --color-chart-2: var(--chart-2);
+  --color-chart-3: var(--chart-3);
+  --color-chart-4: var(--chart-4);
+  --color-chart-5: var(--chart-5);
 }
 
 /* ============================================================
- * THEMING — two orthogonal dimensions
- *
- *   1. MODE   (light / dark)  → neutral surfaces. Selected with
- *      `document.documentElement.dataset.mode`. Defaults to dark.
- *   2. ACCENT (violet / …)    → the primary color only. Selected
- *      with `document.documentElement.dataset.theme`.
- *
- * The two compose: any accent works in either mode. Neutral
- * tokens (background / card / border / muted / sidebar surfaces /
- * neutral charts / radius) live in the MODE blocks below; accent
- * tokens (--primary*, --ring, --chart-1, --sidebar-primary*,
- * --sidebar-ring) live in the ACCENT blocks. They set disjoint
- * variables, so cascade order between them doesn't matter.
- *
- * `:root` carries the dark-mode + violet defaults so a visitor
- * renders correctly before JS runs; the boot script in
- * layout.tsx replays the saved mode + accent before first paint.
- *
- * The three `--primary-*` extras (hover / soft / soft-2) feed
- * hovered primary buttons and tinted-primary surfaces (sidebar
- * active pill, validation badges).
- *
- * Token shapes come straight from the design handoff at
- * project/Color Themes.html — change one, change the other.
+ * DESIGN SYSTEM COLOR TOKENS (HSL)
  * ============================================================ */
 
-/* ---- MODE: neutral surfaces ---- */
+:root {
+  --background: hsl(0 0% 100%);
+  --foreground: hsl(0 0% 12%);
 
-:root,
-html[data-mode="dark"] {
-  --background: oklch(0.13 0.01 260);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.18 0.01 260);
-  --card-2: oklch(0.205 0.01 260);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.18 0.01 260);
-  --popover-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.22 0.01 260);
-  --secondary-foreground: oklch(0.985 0 0);
-  --muted: oklch(0.22 0.01 260);
-  --muted-foreground: oklch(0.65 0.01 260);
-  --accent: oklch(0.22 0.01 260);
-  --accent-foreground: oklch(0.985 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.28 0.01 260);
-  --input: oklch(0.28 0.01 260);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.16 0.01 260);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.22 0.01 260);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(0.28 0.01 260);
+  --surface-1: hsl(210 20% 98%);
+  --surface-2: hsl(214 15% 94%);
+  --surface-3: hsl(214 12% 88%);
+  --surface-4: hsl(0 0% 12%);
+
+  --card: hsl(0 0% 100%);
+  --card-2: hsl(214 15% 96%); /* fallbacks for secondary card borders */
+  --card-foreground: hsl(0 0% 12%);
+  --popover: hsl(0 0% 100%);
+  --popover-foreground: hsl(0 0% 12%);
+
+  --primary: hsl(214 84% 56%);
+  --primary-foreground: hsl(0 0% 100%);
+  --primary-hover: hsl(214 84% 48%);
+  --secondary: hsl(214 15% 96%);
+  --secondary-foreground: hsl(0 0% 20%);
+  --muted: hsl(214 15% 96%);
+  --muted-foreground: hsl(0 0% 40%);
+  --accent: hsl(214 15% 94%);
+  --accent-foreground: hsl(0 0% 12%);
+
+  --info: hsl(214 84% 56%);
+  --info-foreground: hsl(0 0% 100%);
+  --info-light: hsl(213 100% 67%);
+  --destructive: hsl(4 100% 59%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --destructive-hover: hsl(4 75% 53%);
+  --success: hsl(120 92% 28%);
+  --success-foreground: hsl(0 0% 100%);
+  --success-hover: hsl(120 92% 23%);
+  --warning: hsl(47 92% 53%);
+  --warning-foreground: hsl(0 0% 12%);
+  --promo: hsl(22 95% 55%);
+  --promo-foreground: hsl(0 0% 100%);
+
+  --border: hsl(214 15% 88%);
+  --input: hsl(214 15% 92%);
+  --ring: hsl(214 84% 56%);
+
+  --radius: 8px;
+
+  --shadow-soft: 0 1px 2px 0 hsl(220 10% 10% / 0.04);
+  --shadow-card: 0 1px 2px 0 hsl(220 10% 10% / 0.04), 0 1px 3px 0 hsl(220 10% 10% / 0.06);
+  --shadow-elevated: 0 4px 12px -2px hsl(220 15% 15% / 0.08), 0 2px 6px -2px hsl(220 15% 15% / 0.06);
+  --shadow-overlay: 0 16px 40px -12px hsl(220 25% 15% / 0.18), 0 4px 12px -4px hsl(220 25% 15% / 0.10);
+
+  --sidebar-background: hsl(0 0% 100%);
+  --sidebar-foreground: hsl(0 0% 25%);
+  --sidebar-primary: hsl(214 84% 56%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(214 15% 94%);
+  --sidebar-accent-foreground: hsl(0 0% 12%);
+  --sidebar-border: hsl(214 15% 88%);
+  --sidebar-ring: hsl(214 84% 56%);
+
+  --chart-1: hsl(214 84% 56%);
+  --chart-2: hsl(214 15% 60%);
+  --chart-3: hsl(214 15% 70%);
+  --chart-4: hsl(214 15% 80%);
+  --chart-5: hsl(214 15% 90%);
 }
 
+/* Also support html[data-mode="light"] specifically */
 html[data-mode="light"] {
-  --background: oklch(0.99 0.002 260);
-  --foreground: oklch(0.21 0.01 260);
-  --card: oklch(1 0 0);
-  --card-2: oklch(0.985 0.002 260);
-  --card-foreground: oklch(0.21 0.01 260);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.21 0.01 260);
-  --secondary: oklch(0.967 0.003 260);
-  --secondary-foreground: oklch(0.25 0.01 260);
-  --muted: oklch(0.967 0.003 260);
-  --muted-foreground: oklch(0.52 0.015 260);
-  --accent: oklch(0.96 0.004 260);
-  --accent-foreground: oklch(0.25 0.01 260);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0.004 260);
-  --input: oklch(0.922 0.004 260);
-  --chart-2: oklch(0.6 0.1 260);
-  --chart-3: oklch(0.7 0.06 260);
-  --chart-4: oklch(0.8 0.04 260);
-  --chart-5: oklch(0.87 0.03 260);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0.002 260);
-  --sidebar-foreground: oklch(0.21 0.01 260);
-  --sidebar-accent: oklch(0.96 0.004 260);
-  --sidebar-accent-foreground: oklch(0.25 0.01 260);
-  --sidebar-border: oklch(0.922 0.004 260);
+  color-scheme: light;
 }
 
-/* ---- ACCENT: primary color ---- */
+.dark,
+html[data-mode="dark"] {
+  color-scheme: dark;
+  --background: hsl(0 0% 9%);
+  --foreground: hsl(0 0% 92%);
 
+  --surface-1: hsl(0 0% 12%);
+  --surface-2: hsl(0 0% 16%);
+  --surface-3: hsl(0 0% 20%);
+  --surface-4: hsl(0 0% 85%);
+
+  --card: hsl(0 0% 12%);
+  --card-2: hsl(0 0% 14%);
+  --card-foreground: hsl(0 0% 92%);
+  --popover: hsl(0 0% 12%);
+  --popover-foreground: hsl(0 0% 92%);
+
+  --primary: hsl(214 84% 56%);
+  --primary-foreground: hsl(0 0% 100%);
+  --primary-hover: hsl(214 84% 64%);
+  --secondary: hsl(0 0% 16%);
+  --secondary-foreground: hsl(0 0% 92%);
+  --muted: hsl(0 0% 16%);
+  --muted-foreground: hsl(0 0% 62%);
+  --accent: hsl(0 0% 16%);
+  --accent-foreground: hsl(0 0% 92%);
+
+  --info: hsl(214 84% 56%);
+  --info-foreground: hsl(0 0% 100%);
+  --info-light: hsl(213 100% 67%);
+  --destructive: hsl(4 100% 59%);
+  --destructive-foreground: hsl(0 0% 100%);
+  --destructive-hover: hsl(4 75% 53%);
+  --success: hsl(120 88% 32%);
+  --success-foreground: hsl(0 0% 100%);
+  --success-hover: hsl(120 88% 26%);
+  --warning: hsl(47 92% 53%);
+  --warning-foreground: hsl(47 95% 80%);
+  --promo: hsl(22 95% 55%);
+  --promo-foreground: hsl(0 0% 100%);
+
+  --border: hsl(0 0% 18%);
+  --input: hsl(0 0% 16%);
+  --ring: hsl(214 84% 56%);
+
+  --shadow-soft: 0 1px 2px 0 hsl(0 0% 0% / 0.20);
+  --shadow-card: 0 1px 2px 0 hsl(0 0% 0% / 0.24), 0 1px 3px 0 hsl(0 0% 0% / 0.32);
+  --shadow-elevated: 0 4px 12px -2px hsl(0 0% 0% / 0.40), 0 2px 6px -2px hsl(0 0% 0% / 0.30);
+  --shadow-overlay: 0 16px 40px -12px hsl(0 0% 0% / 0.55), 0 4px 12px -4px hsl(0 0% 0% / 0.40);
+
+  --sidebar-background: hsl(0 0% 11%);
+  --sidebar-foreground: hsl(0 0% 82%);
+  --sidebar-primary: hsl(214 84% 56%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-accent: hsl(0 0% 16%);
+  --sidebar-accent-foreground: hsl(0 0% 92%);
+  --sidebar-border: hsl(0 0% 18%);
+  --sidebar-ring: hsl(214 84% 56%);
+
+  --chart-1: hsl(214 84% 56%);
+  --chart-2: hsl(0 0% 40%);
+  --chart-3: hsl(0 0% 30%);
+  --chart-4: hsl(0 0% 25%);
+  --chart-5: hsl(0 0% 20%);
+}
+
+/* ============================================================
+ * ACCENT THEMES (COMPATIBILITY LAYERS)
+ * ============================================================ */
+
+/* Default / Primary Brand Theme */
 :root,
-html[data-theme="violet"] {
-  --primary: oklch(0.526 0.247 293);
-  --primary-foreground: oklch(0.985 0 0);
-  --primary-hover: oklch(0.6 0.22 293);
-  --primary-soft: oklch(0.526 0.247 293 / 0.12);
-  --primary-soft-2: oklch(0.526 0.247 293 / 0.2);
-  --ring: oklch(0.526 0.247 293);
-  --chart-1: oklch(0.526 0.247 293);
-  --sidebar-primary: oklch(0.526 0.247 293);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-ring: oklch(0.526 0.247 293);
+html[data-theme="brand"] {
+  --primary: hsl(214 84% 56%);
+  --primary-foreground: hsl(0 0% 100%);
+  --primary-hover: hsl(214 84% 48%);
+  --primary-soft: hsl(214 84% 56% / 0.12);
+  --primary-soft-2: hsl(214 84% 56% / 0.22);
+  --ring: hsl(214 84% 56%);
+  --chart-1: hsl(214 84% 56%);
+  --sidebar-primary: hsl(214 84% 56%);
+  --sidebar-primary-foreground: hsl(0 0% 100%);
+  --sidebar-ring: hsl(214 84% 56%);
+}
+.dark html[data-theme="brand"],
+html[data-mode="dark"] html[data-theme="brand"] {
+  --primary-hover: hsl(214 84% 64%);
 }
 
+/* Other Themes mapped in OKLCH or standard formatting for compatibility */
 html[data-theme="emerald"] {
   --primary: oklch(0.62 0.16 162);
   --primary-foreground: oklch(0.16 0.02 162);
@@ -174,7 +316,6 @@ html[data-theme="emerald"] {
   --primary-soft-2: oklch(0.62 0.16 162 / 0.22);
   --ring: oklch(0.62 0.16 162);
   --chart-1: oklch(0.62 0.16 162);
-  --chart-2: oklch(0.7 0.14 195);
   --sidebar-primary: oklch(0.62 0.16 162);
   --sidebar-primary-foreground: oklch(0.16 0.02 162);
   --sidebar-ring: oklch(0.62 0.16 162);
@@ -188,7 +329,6 @@ html[data-theme="cobalt"] {
   --primary-soft-2: oklch(0.585 0.2 254 / 0.22);
   --ring: oklch(0.585 0.2 254);
   --chart-1: oklch(0.585 0.2 254);
-  --chart-2: oklch(0.7 0.15 220);
   --sidebar-primary: oklch(0.585 0.2 254);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-ring: oklch(0.585 0.2 254);
@@ -202,7 +342,6 @@ html[data-theme="amber"] {
   --primary-soft-2: oklch(0.745 0.16 65 / 0.22);
   --ring: oklch(0.745 0.16 65);
   --chart-1: oklch(0.745 0.16 65);
-  --chart-2: oklch(0.7 0.15 35);
   --sidebar-primary: oklch(0.745 0.16 65);
   --sidebar-primary-foreground: oklch(0.18 0.03 65);
   --sidebar-ring: oklch(0.745 0.16 65);
@@ -216,20 +355,48 @@ html[data-theme="rose"] {
   --primary-soft-2: oklch(0.645 0.22 16 / 0.22);
   --ring: oklch(0.645 0.22 16);
   --chart-1: oklch(0.645 0.22 16);
-  --chart-2: oklch(0.7 0.18 340);
   --sidebar-primary: oklch(0.645 0.22 16);
   --sidebar-primary-foreground: oklch(0.985 0 0);
   --sidebar-ring: oklch(0.645 0.22 16);
 }
 
+/* ============================================================
+ * BASE CUSTOM TYPOGRAPHY & LAYOUT UTILITIES
+ * ============================================================ */
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
   }
-  body {
-    @apply bg-background text-foreground;
+  html, body {
+    @apply bg-background text-foreground antialiased;
+    font-family: "Poppins", sans-serif;
+    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    overflow-x: hidden;
   }
-  html {
-    @apply font-sans;
-  }
+  h1 { @apply text-h1 font-semibold leading-tight; }
+  h2 { @apply text-h2 font-semibold leading-tight; }
+  h3 { @apply text-h3 font-semibold leading-snug; }
+  h4 { @apply text-h4 font-medium leading-snug; }
+}
+
+/* Custom interactive utility class */
+.card-interactive {
+  @apply cursor-pointer transition-all duration-200 hover:shadow-card active:scale-[0.98];
+}
+
+/* Minimalist Scrollbar layout styling */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 9999px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: var(--muted-foreground);
 }

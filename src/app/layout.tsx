@@ -1,5 +1,4 @@
 import type { Metadata, Viewport } from "next";
-import { Poppins } from "next/font/google";
 import Script from "next/script";
 import "./globals.css";
 import { ThemeProvider } from "@/hooks/use-theme";
@@ -12,12 +11,6 @@ import {
   STORAGE_KEY,
   THEME_IDS,
 } from "@/lib/themes";
-
-const poppins = Poppins({
-  variable: "--font-sans",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700", "800"],
-});
 
 export const metadata: Metadata = {
   title: {
@@ -68,10 +61,22 @@ const THEME_BOOT_SCRIPT = `
     var MODE_DEFAULT = ${JSON.stringify(DEFAULT_MODE)};
     var MODES = ${JSON.stringify(MODES)};
     var savedMode = localStorage.getItem(MODE_KEY);
-    d.dataset.mode = MODES.indexOf(savedMode) !== -1 ? savedMode : MODE_DEFAULT;
+    var mode = MODES.indexOf(savedMode) !== -1 ? savedMode : MODE_DEFAULT;
+    d.dataset.mode = mode;
+    if (mode === 'dark') {
+      d.classList.add('dark');
+    } else {
+      d.classList.remove('dark');
+    }
   } catch (_e) {
     d.dataset.theme = ${JSON.stringify(DEFAULT_THEME)};
-    d.dataset.mode = ${JSON.stringify(DEFAULT_MODE)};
+    var defaultMode = ${JSON.stringify(DEFAULT_MODE)};
+    d.dataset.mode = defaultMode;
+    if (defaultMode === 'dark') {
+      d.classList.add('dark');
+    } else {
+      d.classList.remove('dark');
+    }
   }
 })();
 `;
@@ -81,12 +86,14 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const isDarkDefault = DEFAULT_MODE === "dark";
+
   return (
     <html
-      lang="en"
+      lang="pt-BR"
       data-theme={DEFAULT_THEME}
       data-mode={DEFAULT_MODE}
-      className={`${poppins.variable} h-full antialiased`}
+      className={isDarkDefault ? "dark h-full antialiased" : "h-full antialiased"}
       // The `theme-boot` script below rewrites `data-theme` and
       // `data-mode` on <html> from localStorage before React hydrates,
       // so for any non-default choice the client DOM intentionally
