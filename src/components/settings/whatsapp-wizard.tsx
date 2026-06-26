@@ -158,21 +158,23 @@ export function WhatsAppWizard({ onSuccess, onCancel, webhookUrl }: WhatsAppWiza
       }
 
       (window as any).FB.login(
-        async (response: any) => {
-          try {
-            if (response.authResponse) {
-              const token = response.authResponse.accessToken;
-              setAccessToken(token);
-              setIsSimulated(false);
-              await loadNumbers(false, token);
-              setStep(3);
-            } else {
-              toast.error('Conexão cancelada pelo usuário ou falha na autenticação.');
-            }
-          } catch (err: any) {
-            console.error('Error in FB login callback:', err);
-            toast.error('Erro ao processar login: ' + err.message);
-          } finally {
+        (response: any) => {
+          if (response.authResponse) {
+            const token = response.authResponse.accessToken;
+            setAccessToken(token);
+            setIsSimulated(false);
+            loadNumbers(false, token)
+              .then(() => {
+                setStep(3);
+                setLoading(false);
+              })
+              .catch((err: any) => {
+                console.error('Error in FB login callback:', err);
+                toast.error('Erro ao processar números da conta: ' + err.message);
+                setLoading(false);
+              });
+          } else {
+            toast.error('Conexão cancelada pelo usuário ou falha na autenticação.');
             setLoading(false);
           }
         },
