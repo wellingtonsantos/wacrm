@@ -207,7 +207,7 @@ export function MessageThread({
       .from("profiles")
       .select("*")
       .order("full_name")
-      .then(({ data, error }) => {
+      .then(({ data, error }: any) => {
         if (cancelled) return;
         if (error) {
           console.error("Failed to fetch profiles:", error);
@@ -348,7 +348,7 @@ export function MessageThread({
           table: "message_reactions",
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload) => {
+        (payload: any) => {
           const row = payload.new as MessageReaction;
           setReactions((prev) => {
             if (prev.some((r) => r.id === row.id)) return prev;
@@ -378,7 +378,7 @@ export function MessageThread({
           table: "message_reactions",
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload) => {
+        (payload: any) => {
           const row = payload.new as MessageReaction;
           setReactions((prev) => prev.map((r) => (r.id === row.id ? row : r)));
         },
@@ -391,7 +391,7 @@ export function MessageThread({
           table: "message_reactions",
           filter: `conversation_id=eq.${conversationId}`,
         },
-        (payload) => {
+        (payload: any) => {
           const old = payload.old as Partial<MessageReaction>;
           if (!old?.id) return;
           setReactions((prev) => prev.filter((r) => r.id !== old.id));
@@ -426,7 +426,7 @@ export function MessageThread({
       .from("conversations")
       .update({ unread_count: 0 })
       .eq("id", conversationId)
-      .then(({ error }) => {
+      .then(({ error }: any) => {
         if (error) console.error("Failed to reset unread_count:", error);
       });
   }, [conversationId, hasUnread]);

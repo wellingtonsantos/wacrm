@@ -47,7 +47,7 @@ export function useTotalUnread(): number {
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "conversations" },
-        (payload) => {
+        (payload: any) => {
           const map = countsRef.current;
           if (payload.eventType === "DELETE") {
             const oldRow = payload.old as Partial<Conversation>;

@@ -49,7 +49,7 @@ export function useRealtime({
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "messages" },
-        (payload) => {
+        (payload: any) => {
           onMessageRef.current?.({
             eventType: payload.eventType as RealtimeEvent<Message>["eventType"],
             new: payload.new as Message,
@@ -60,7 +60,7 @@ export function useRealtime({
       .on(
         "postgres_changes",
         { event: "*", schema: "public", table: "conversations" },
-        (payload) => {
+        (payload: any) => {
           onConversationRef.current?.({
             eventType: payload.eventType as RealtimeEvent<Conversation>["eventType"],
             new: payload.new as Conversation,
@@ -68,7 +68,7 @@ export function useRealtime({
           });
         }
       )
-      .subscribe((status) => {
+      .subscribe((status: any) => {
         setIsConnected(status === "SUBSCRIBED");
       });
 

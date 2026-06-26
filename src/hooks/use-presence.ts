@@ -90,7 +90,7 @@ export function usePresence(enabled = true): UsePresenceResult {
           table: "member_presence",
           filter: `account_id=eq.${accountId}`,
         },
-        (payload) => {
+        (payload: any) => {
           if (payload.eventType === "DELETE") {
             const old = payload.old as { user_id?: string };
             if (!old.user_id) return;
@@ -117,7 +117,7 @@ export function usePresence(enabled = true): UsePresenceResult {
       .from("member_presence")
       .select("user_id, status, last_seen_at")
       .eq("account_id", accountId)
-      .then(({ data, error }) => {
+      .then(({ data, error }: any) => {
         if (cancelled) return;
         if (error) {
           console.error("[usePresence] initial fetch error:", error.message);
